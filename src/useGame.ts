@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { freshness, getPublic, normalize } from "./data.ts";
+import { freshness, getPublic, normalize, roundClosesAt } from "./data.ts";
 import type { Snapshot } from "./data.ts";
 import { newMatch, predict, resolveMatch } from "./engine.ts";
 import type { BrainCall, Match, Persona, Pick, Round } from "./engine.ts";
@@ -331,6 +331,7 @@ export function useGame() {
       const next = (BigInt(data.anchor) + 1n).toString();
       if (
         spectating &&
+        Date.now() < data.nextEnd &&
         data.rounds.length >= 3 &&
         !watch.some((w) => w.round === next && w.persona === persona)
       )
@@ -387,6 +388,10 @@ export function useGame() {
           throw new Error(
             "That round just settled. Review the new round and lock again.",
           );
+        if (!(Date.now() < fresh.nextEnd))
+          throw new Error(
+            `Round #${BigInt(fresh.anchor) + 1n} has closed. Locks reopen when settlements catch up.`,
+          );
         const match = newMatch(
           fresh.installation,
           persona,
@@ -408,6 +413,10 @@ export function useGame() {
         )
           throw new Error(
             "That round just settled. Wait for the score to update.",
+          );
+        if (!(Date.now() < roundClosesAt(fresh, leg.round)))
+          throw new Error(
+            `Round #${leg.round} has closed. Locks reopen when settlements catch up.`,
           );
         setSave((s) =>
           s.match?.id === current.id
@@ -469,10 +478,12 @@ export function useGame() {
     (!spectating ? leg?.round : null) ??
     (data ? (BigInt(data.anchor) + 1n).toString() : null);
   const locked = Boolean(leg?.player);
+  const roundClosed = !!data && !!round && !(now < roundClosesAt(data, round));
   const canLock =
     state === "online" &&
     !!brain &&
     !locked &&
+    !roundClosed &&
     !busy &&
     !activeMatch?.outcome &&
     (!leg || (!!data && BigInt(leg.round) > BigInt(data.anchor)));
@@ -496,6 +507,7 @@ export function useGame() {
     round,
     leg,
     locked,
+    roundClosed,
     canLock,
     knownRounds,
   };

@@ -204,7 +204,7 @@ export function freshness(
   if (
     data.measurementFreshness !== "online" ||
     data.source !== "live" ||
-    now - Date.parse(data.generatedAt) > 15000 ||
+    now - Date.parse(data.generatedAt) > data.staleAfter * 1000 ||
     now - Date.parse(data.observedAt) > data.staleAfter * 1000 ||
     now - Date.parse(data.historyGeneratedAt) > 120000 ||
     now - Date.parse(data.statsGeneratedAt) > 300000 ||
@@ -212,6 +212,12 @@ export function freshness(
   )
     return "stale";
   return "online";
+}
+export function roundClosesAt(data: Snapshot, round: string): number {
+  const offset = BigInt(round) - BigInt(data.anchor) - 1n;
+  // Keep the clock calculation bounded without narrowing a round identifier.
+  if (offset < -1000n || offset > 1000n) return NaN;
+  return data.nextEnd + Number(offset) * data.roundMs;
 }
 export const API = "https://api.squeekchain.com";
 export async function getPublic(path: string, signal: AbortSignal) {

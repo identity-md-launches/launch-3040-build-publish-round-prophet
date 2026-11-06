@@ -16,6 +16,7 @@ import {
   normalize,
   parsePublic,
   provenRounds,
+  roundClosesAt,
 } from "../src/data.ts";
 import {
   coldHistory,
@@ -111,7 +112,8 @@ test("freshness stops on failures, stale measurement, cached history or old stat
     now = Date.parse(fixtureTime);
   assert.equal(freshness(s, now, false), "online");
   assert.equal(freshness(s, now, true), "offline");
-  assert.equal(freshness(s, now + 16000, false), "stale");
+  assert.equal(freshness(s, now + 55000, false), "online");
+  assert.equal(freshness(s, now + 120001, false), "stale");
   assert.equal(
     freshness({ ...s, measurementFreshness: "stale" }, now, false),
     "stale",
@@ -121,6 +123,32 @@ test("freshness stops on failures, stale measurement, cached history or old stat
     "stale",
   );
   assert.equal(freshness(null, now, false), "connecting");
+});
+test("status age follows the API window while measurement age stays independently checked", () => {
+  const f = fixtureApi();
+  const s = normalize(f.status, f.settlements, f.stats, [], "live");
+  const now = Date.parse(fixtureTime);
+  const ago = (ms: number) => new Date(now - ms).toISOString();
+  for (const age of [16000, 55000, 60000, 119999, 120000])
+    assert.equal(freshness({ ...s, generatedAt: ago(age) }, now, false), "online");
+  assert.equal(freshness({ ...s, generatedAt: ago(120001) }, now, false), "stale");
+  assert.equal(freshness({ ...s, observedAt: ago(120001) }, now, false), "stale");
+  assert.equal(freshness({ ...s, staleAfter: 45, generatedAt: ago(45000) }, now, false), "online");
+  assert.equal(freshness({ ...s, staleAfter: 45, generatedAt: ago(45001) }, now, false), "stale");
+  assert.equal(freshness({ ...s, historyGeneratedAt: ago(120001) }, now, false), "stale");
+  assert.equal(freshness({ ...s, statsGeneratedAt: ago(300001) }, now, false), "stale");
+  assert.equal(freshness({ ...s, generatedAt: new Date(now + 30001).toISOString() }, now, false), "stale");
+});
+test("round deadlines use the API clock for consecutive legs with bigint-safe identifiers", () => {
+  const f = fixtureApi();
+  const s = normalize(f.status, f.settlements, f.stats, [], "live");
+  assert.equal(roundClosesAt(s, "21"), s.nextEnd);
+  assert.equal(roundClosesAt(s, "22"), s.nextEnd + s.roundMs);
+  assert.equal(roundClosesAt(s, "23"), s.nextEnd + s.roundMs * 2);
+  const huge = { ...s, anchor: "900719925474099312345" };
+  assert.equal(roundClosesAt(huge, "900719925474099312346"), s.nextEnd);
+  assert.equal(roundClosesAt(huge, "900719925474099312347"), s.nextEnd + s.roundMs);
+  assert.ok(Number.isNaN(roundClosesAt(huge, "21")));
 });
 test("quantile bands use positive work, exact bigint values and inclusive ties", () => {
   const d = distribution(

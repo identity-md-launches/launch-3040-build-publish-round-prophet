@@ -26,7 +26,7 @@ const check = async (name, fn) => {
   }
 };
 let contexts = [];
-async function setup(width = 390) {
+async function setup(width = 390, initial = {}) {
   const context = await browser.newContext({
     viewport: { width, height: 844 },
     acceptDownloads: true,
@@ -40,10 +40,12 @@ async function setup(width = 390) {
     rounds: coldHistory(),
     offline: false,
     stale: false,
-    lag: false,
+    statusAgeMs: 0,
+    nextEnd: null,
     statusCalls: 0,
     historyCalls: 0,
     statsCalls: 0,
+    ...initial,
   };
   await page.route("https://api.squeekchain.com/**", async (route) => {
     if (model.offline) {
@@ -57,8 +59,9 @@ async function setup(width = 390) {
     const path = new URL(route.request().url()).pathname;
     const f = fixtureApi(model.rounds, new Date().toISOString());
     if (model.stale) f.status.measurement.freshness = "stale";
-    if (model.lag)
-      f.status.generatedAt = new Date(Date.now() - 60000).toISOString();
+    f.status.generatedAt = new Date(Date.now() - model.statusAgeMs).toISOString();
+    if (model.nextEnd !== null)
+      f.settlements.mining.nextRound.endsAt = new Date(model.nextEnd).toISOString();
     if (path === "/v1/status") model.statusCalls++;
     if (path === "/v1/settlements") model.historyCalls++;
     if (path === "/v1/measurement/stats") model.statsCalls++;
@@ -79,10 +82,7 @@ async function setup(width = 390) {
     });
   });
   await page.goto(server.url);
-  await page.getByRole("button", { name: "Lock & start duel" }).waitFor();
-  await page.waitForFunction(
-    () => !document.querySelector(".lock-cta").disabled,
-  );
+  await page.locator(".freshness.online").waitFor();
   return { context, page, model, errors };
 }
 const settle = (model, work) => {
@@ -97,12 +97,117 @@ const saved = (page) =>
     JSON.parse(localStorage.getItem("round-prophet:season:v1")),
   );
 const next = async (page) => {
-  await page.getByRole("button", { name: "Lock this round" }).waitFor();
-  await page.waitForFunction(
-    () => !document.querySelector(".lock-cta").disabled,
-  );
+  await page.getByRole("button", { name: "Pick Active or Idle" }).waitFor();
+  assert.ok(await page.locator(".lock-cta").isDisabled());
+  assert.equal(await page.locator('.side-choice[aria-pressed="true"]').count(), 0);
 };
 try {
+  await check(
+    "a side must be explicitly chosen on first load, each new round and rematch",
+    async () => {
+      const { page } = await setup();
+      await page.getByRole("button", { name: "Pick Active or Idle" }).waitFor();
+      assert.ok(await page.locator(".lock-cta").isDisabled());
+      assert.equal(await page.locator('.side-choice[aria-pressed="true"]').count(), 0);
+      assert.ok(await page.getByRole("button", { name: "High", exact: true }).isDisabled());
+      assert.equal((await saved(page)).match, null);
+      await page.screenshot({ path: "test/scratch/browser/unselected-390.png", fullPage: false });
+      await page.getByRole("button", { name: "Idle Zero work" }).focus();
+      await page.keyboard.press("Space");
+      assert.equal(await page.getByRole("button", { name: "Idle Zero work" }).getAttribute("aria-pressed"), "true");
+      assert.equal(await page.locator(".lock-cta").isDisabled(), false);
+      await page.getByRole("button", { name: "Lock & start duel" }).click();
+      await page.getByRole("button", { name: "Prediction locked" }).waitFor();
+      assert.equal((await saved(page)).match.legs[0].player.side, "idle");
+    },
+  );
+  await check(
+    "a healthy 55-second-old status stays Online for locking, scoring and navigation",
+    async () => {
+      const { page, model } = await setup(390, { statusAgeMs: 55000 });
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
+      await page.getByRole("button", { name: "Lock & start duel" }).click();
+      await page.getByRole("button", { name: "Prediction locked" }).waitFor();
+      settle(model, "200");
+      await next(page);
+      assert.equal((await saved(page)).match.legs[0].result.winner, "you");
+      for (const name of ["Spectate", "History", "Duel arena"]) {
+        await page.getByRole("button", { name, exact: true }).click();
+        assert.match(await page.locator(".freshness").innerText(), /Online/);
+      }
+    },
+  );
+  await check(
+    "a round closed before settlement accepts neither player locks nor new spectator calls",
+    async () => {
+      const { page, model } = await setup(390, { nextEnd: Date.now() - 180000 });
+      await page.getByRole("button", { name: "Round closed", exact: true }).waitFor();
+      await page.getByRole("button", { name: "Idle Zero work" }).click();
+      assert.ok(await page.locator(".lock-cta").isDisabled());
+      assert.match(await page.locator(".lock-note").innerText(), /Round #21 has closed/);
+      assert.equal((await saved(page)).match, null);
+      await page.screenshot({ path: "test/scratch/browser/closed-390.png", fullPage: false });
+      await page.getByRole("button", { name: "Spectate", exact: true }).click();
+      await page.locator(".spectator-call .muted").filter({ hasText: "round closed" }).waitFor();
+      // Force an observed feed cycle after entering Spectate; no timer wait needed.
+      const response = page.waitForResponse("https://api.squeekchain.com/v1/status");
+      await page.evaluate(() => window.dispatchEvent(new Event("online")));
+      await response;
+      assert.equal((await saved(page)).watch.length, 0);
+      model.nextEnd = Date.now() + 600000;
+      settle(model, "0");
+      await page.getByRole("button", { name: "Duel arena", exact: true }).click();
+      await page.evaluate(() => window.dispatchEvent(new Event("online")));
+      await page.getByRole("button", { name: "Pick Active or Idle" }).waitFor();
+      await page.getByRole("button", { name: "Idle Zero work" }).click();
+      await page.getByRole("button", { name: "Lock & start duel" }).click();
+      await page.getByRole("button", { name: "Prediction locked" }).waitFor();
+      assert.equal((await saved(page)).match.legs[0].round, "22");
+    },
+  );
+  await check(
+    "locks close at the deadline even when the settlement anchor has not advanced",
+    async () => {
+      const { page, model } = await setup();
+      await page.clock.install({ time: new Date() });
+      await page.getByRole("button", { name: "Idle Zero work" }).click();
+      model.nextEnd = Date.now() + 2000;
+      const response = page.waitForResponse("https://api.squeekchain.com/v1/status");
+      await page.evaluate(() => window.dispatchEvent(new Event("online")));
+      await response;
+      await page.clock.fastForward(3000);
+      await page.getByRole("button", { name: "Round closed", exact: true }).waitFor();
+      assert.ok(await page.locator(".lock-cta").isDisabled());
+      assert.match(await page.locator(".round-identifier").innerText(), /#21/);
+      assert.equal((await saved(page)).match, null);
+      assert.match(await page.locator(".freshness").innerText(), /Online/);
+    },
+  );
+  await check(
+    "the final refresh rejects closure racing a first lock or later leg without inventing scores",
+    async () => {
+      const { page, model } = await setup();
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
+      model.nextEnd = Date.now() - 1;
+      await page.getByRole("button", { name: "Lock & start duel" }).click();
+      await page.getByRole("alert").filter({ hasText: "Round #21 has closed" }).waitFor();
+      assert.equal((await saved(page)).match, null);
+      model.nextEnd = Date.now() + 600000;
+      await page.evaluate(() => window.dispatchEvent(new Event("online")));
+      await page.getByRole("button", { name: "Lock & start duel" }).click();
+      await page.getByRole("button", { name: "Prediction locked" }).waitFor();
+      settle(model, "200");
+      await next(page);
+      await page.getByRole("button", { name: "Idle Zero work" }).click();
+      model.nextEnd = Date.now() - 1;
+      await page.getByRole("button", { name: "Lock this round" }).click();
+      await page.getByRole("alert").filter({ hasText: "Round #22 has closed" }).waitFor();
+      const match = (await saved(page)).match;
+      assert.equal(match.legs[1].player, null);
+      assert.equal(match.legs[1].result, null);
+      assert.equal(match.legs[1].lockedAt, null);
+    },
+  );
   await check(
     "390 first screen: product, persona and primary action; 320/760/1024/1440 reflow",
     async () => {
@@ -179,6 +284,7 @@ try {
     "complete three-round 2–1 duel, restore locks, freeze Brain, download and copy share card",
     async () => {
       const { page, model, errors } = await setup();
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "High", exact: true }).click();
       await page.getByRole("button", { name: "Lock & start duel" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
@@ -200,6 +306,7 @@ try {
         await page.locator(".scoreboard").getAttribute("aria-label"),
         /You 1, Brain 0/,
       );
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "Lock this round" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
       settle(model, "0");
@@ -208,6 +315,7 @@ try {
         await page.locator(".scoreboard").getAttribute("aria-label"),
         /You 1, Brain 1/,
       );
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "High", exact: true }).click();
       await page.getByRole("button", { name: "Lock this round" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
@@ -270,10 +378,12 @@ try {
     "a 2–0 duel ends early and rematch resets the arena",
     async () => {
       const { page, model } = await setup();
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "Lock & start duel" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
       settle(model, "200");
       await next(page);
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "Lock this round" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
       settle(model, "200");
@@ -286,7 +396,7 @@ try {
         /Not needed/,
       );
       await page.getByRole("button", { name: "Play another duel" }).click();
-      await page.getByRole("button", { name: "Lock & start duel" }).waitFor();
+      await page.getByRole("button", { name: "Pick Active or Idle" }).waitFor();
       assert.equal((await saved(page)).match, null);
     },
   );
@@ -322,14 +432,15 @@ try {
     "stale measurement and old status stop locks; retry returns to Online",
     async () => {
       const { page, model } = await setup();
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       model.stale = true;
       await page.locator(".freshness.stale").waitFor();
       assert.ok(await page.locator(".lock-cta").isDisabled());
       model.stale = false;
-      model.lag = true;
+      model.statusAgeMs = 120001;
       await page.getByRole("button", { name: "Retry feed" }).click();
       assert.ok(await page.locator(".lock-cta").isDisabled());
-      model.lag = false;
+      model.statusAgeMs = 0;
       await page.getByRole("button", { name: "Retry feed" }).click();
       await page.waitForFunction(
         () => !document.querySelector(".lock-cta").disabled,
@@ -340,6 +451,7 @@ try {
     "consecutive missed calls yield explicit forfeits and Brain holds",
     async () => {
       const { page, model } = await setup();
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "Lock & start duel" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
       settle(model, "0");
@@ -424,6 +536,7 @@ try {
         await help.evaluate((el) => el === document.activeElement),
         true,
       );
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "Lock & start duel" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
       await page.emulateMedia({ reducedMotion: "reduce" });
@@ -455,6 +568,7 @@ try {
     "a round that settles during lock is rejected instead of silently moving the call",
     async () => {
       const { page, model } = await setup();
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       settle(model, "0");
       await page.getByRole("button", { name: "Lock & start duel" }).click();
       await page
@@ -464,6 +578,7 @@ try {
         )
         .waitFor();
       assert.equal((await saved(page)).match, null);
+      await page.getByRole("button", { name: "Active Work > 0" }).click();
       await page.getByRole("button", { name: "Lock & start duel" }).click();
       await page.getByRole("button", { name: "Prediction locked" }).waitFor();
       assert.equal((await saved(page)).match.legs[0].round, "22");
@@ -480,9 +595,8 @@ try {
         ),
       );
       await page.reload();
-      await page.waitForFunction(
-        () => !document.querySelector(".lock-cta").disabled,
-      );
+      await page.locator(".freshness.online").waitFor();
+      await page.getByRole("button", { name: "Pick Active or Idle" }).waitFor();
       assert.equal((await saved(page)).match, null);
     },
   );

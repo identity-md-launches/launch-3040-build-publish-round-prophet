@@ -50,7 +50,7 @@ function MatchRows({ match }: { match: Match }) {
                   ? "Duel ended early"
                   : l.player
                     ? `${sideName(l.player.side)}${l.player.band ? ` · ${bandName(l.player.band)}` : ""}`
-                    : "Lock before settlement"}
+                    : "Lock before round closes"}
             </small>
           </span>
           <span className="round-points">
@@ -64,7 +64,7 @@ function MatchRows({ match }: { match: Match }) {
 export default function App() {
   const game = useGame();
   const [view, setView] = useState<View>(initialView);
-  const [side, setSide] = useState<Side>("active");
+  const [side, setSide] = useState<Side | null>(null);
   const [band, setBand] = useState<Band | null>(null);
   const [selectedResult, setSelectedResult] = useState<Match | null>(null);
   const [retrying, setRetrying] = useState(false);
@@ -82,7 +82,7 @@ export default function App() {
   const announcement = currentResult
     ? `${currentResult.outcome === "you" ? "Broke the Brain. You won." : currentResult.outcome === "brain" ? "Brain holds. You lost." : "The duel is tied."} Final score: You ${score.you}, Brain ${score.brain}.`
     : lastLeg?.result
-      ? `Round ${lastLeg.round}: ${lastLeg.result.missed ? "Missed call, Brain wins." : lastLeg.result.winner === "you" ? "You win." : lastLeg.result.winner === "brain" ? "Brain wins." : "Tied calls."} Lock your next prediction before settlement.`
+      ? `Round ${lastLeg.round}: ${lastLeg.result.missed ? "Missed call, Brain wins." : lastLeg.result.winner === "you" ? "You win." : lastLeg.result.winner === "brain" ? "Brain wins." : "Tied calls."} Lock your next prediction before the round closes.`
       : active
         ? "Duel started. Your first prediction is locked."
         : "";
@@ -95,7 +95,7 @@ export default function App() {
     game.setSpectating(view === "spectate");
   }, [view, game.setSpectating]);
   useEffect(() => {
-    setSide(leg?.player?.side ?? "active");
+    setSide(leg?.player?.side ?? null);
     setBand(leg?.player?.band ?? null);
   }, [round, game.locked]);
   const navigate = (next: View) => {
@@ -132,9 +132,13 @@ export default function App() {
           ? "Connecting to the wheel…"
           : state !== "online"
             ? "Locks paused"
-            : active
-              ? "Lock this round"
-              : "Lock & start duel";
+            : game.roundClosed
+              ? "Round closed"
+              : !side
+                ? "Pick Active or Idle"
+                : active
+                  ? "Lock this round"
+                  : "Lock & start duel";
   const firstScreenMessage =
     state === "offline"
       ? "The public feed is offline. Locks and scoring are paused."
@@ -390,7 +394,7 @@ export default function App() {
                     </p>
                     <span className="muted">
                       {brain
-                        ? `${brain.confidence}% model lean · ${state === "online" ? "locked ahead of settlement" : "calls paused"}`
+                        ? `${brain.confidence}% model lean · ${state !== "online" ? "calls paused" : game.roundClosed ? "round closed; awaiting settlement" : "calls lock before round close"}`
                         : "Reading the public feed"}
                     </span>
                     <button
@@ -469,7 +473,7 @@ export default function App() {
                       disabled={
                         game.locked ||
                         game.busy ||
-                        side === "idle" ||
+                        side !== "active" ||
                         dist.count === 0 ||
                         settledWait
                       }
@@ -502,8 +506,8 @@ export default function App() {
                     </fieldset>
                     <button
                       className="primary lock-cta"
-                      disabled={!game.canLock}
-                      onClick={() => void game.lock({ side, band })}
+                      disabled={!side || !game.canLock}
+                      onClick={() => side && void game.lock({ side, band })}
                     >
                       <Icon name={game.locked ? "check" : "lock"} />
                       {lockLabel}
@@ -512,9 +516,11 @@ export default function App() {
                     <p className="lock-note">
                       {game.locked
                         ? `You called ${sideName(leg!.player!.side)}${leg!.player!.band ? ` / ${bandName(leg!.player!.band)}` : ""}. Waiting for a confirmed settlement.`
-                        : side === "idle"
-                          ? "Idle means exactly zero work. Bands apply to Active calls."
-                          : "Correct side: 3 points. Correct work band: +1. Most points wins the round."}
+                        : game.roundClosed
+                          ? `Round #${round} has closed. Locks reopen when settlements catch up.`
+                          : side === "idle"
+                            ? "Idle means exactly zero work. Bands apply to Active calls."
+                            : "Correct side: 3 points. Correct work band: +1. Most points wins the round."}
                     </p>
                     {game.error && (
                       <p className="inline-error" role="alert">
@@ -932,7 +938,8 @@ export default function App() {
         </ol>
         <p>
           Brain commits all three calls at the start. Lock each of your calls
-          before its settlement. An uncalled round is a forfeit. Refreshing
+          before it closes. Closed rounds wait for settlement; you cannot lock
+          their already public work. An uncalled round is a forfeit. Refreshing
           restores a match in this browser.
         </p>
         <p>

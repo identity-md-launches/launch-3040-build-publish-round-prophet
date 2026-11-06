@@ -1,13 +1,13 @@
 {
   "limitBytes": 8388608,
-  "addedBytes": 1651564,
-  "remainingBytes": 6737044,
-  "fileCount": 53,
-  "artifactBytes": 868012,
+  "addedBytes": 1660432,
+  "remainingBytes": 6728176,
+  "fileCount": 57,
+  "artifactBytes": 861458,
   "includedPathBudget": {
     "/artifacts/**": 2097152
   },
-  "distBytes": 416440,
+  "distBytes": 417162,
   "ignoredPathBudget": {
     "**/node_modules/": 0,
     "**/.npm/": 0,
@@ -22,16 +22,24 @@
       "bytes": 409
     },
     {
+      "path": ".imd-responses.json",
+      "bytes": 2520
+    },
+    {
       "path": "artifacts/accessibility-report.json",
-      "bytes": 1343
+      "bytes": 1717
     },
     {
       "path": "artifacts/arena-1440.png",
-      "bytes": 179668
+      "bytes": 177429
     },
     {
       "path": "artifacts/arena-390.png",
-      "bytes": 133455
+      "bytes": 61479
+    },
+    {
+      "path": "artifacts/closed-round-390.png",
+      "bytes": 62341
     },
     {
       "path": "artifacts/design-guidance-LICENSE.txt",
@@ -47,7 +55,7 @@
     },
     {
       "path": "artifacts/interaction-report.json",
-      "bytes": 1268
+      "bytes": 1893
     },
     {
       "path": "artifacts/live-data-check.json",
@@ -55,27 +63,35 @@
     },
     {
       "path": "artifacts/offline-first-screen-390.png",
-      "bytes": 148494
+      "bytes": 144579
+    },
+    {
+      "path": "artifacts/revision-interface.json",
+      "bytes": 1499
+    },
+    {
+      "path": "artifacts/revision-reproductions.json",
+      "bytes": 786
     },
     {
       "path": "artifacts/spectator-390.png",
-      "bytes": 137593
+      "bytes": 139709
     },
     {
       "path": "artifacts/taste-report.json",
-      "bytes": 84732
+      "bytes": 84686
     },
     {
       "path": "artifacts/validation.md",
-      "bytes": 26673
+      "bytes": 30231
     },
     {
       "path": "DESIGN.md",
-      "bytes": 12238
+      "bytes": 13145
     },
     {
-      "path": "dist/assets/index-BC468hAn.js",
-      "bytes": 244441
+      "path": "dist/assets/index-3EUK_bDs.js",
+      "bytes": 245163
     },
     {
       "path": "dist/assets/index-C2b3cWmQ.css",
@@ -155,7 +171,7 @@
     },
     {
       "path": "README.md",
-      "bytes": 12228
+      "bytes": 13435
     },
     {
       "path": "scripts/check-budget.mjs",
@@ -167,7 +183,7 @@
     },
     {
       "path": "src/App.tsx",
-      "bytes": 37200
+      "bytes": 37652
     },
     {
       "path": "src/components/Art.tsx",
@@ -179,7 +195,7 @@
     },
     {
       "path": "src/data.ts",
-      "bytes": 8130
+      "bytes": 8465
     },
     {
       "path": "src/engine.ts",
@@ -195,15 +211,15 @@
     },
     {
       "path": "src/useGame.ts",
-      "bytes": 15577
+      "bytes": 16120
     },
     {
       "path": "test/browser.mjs",
-      "bytes": 18496
+      "bytes": 25405
     },
     {
       "path": "test/engine.test.ts",
-      "bytes": 8277
+      "bytes": 10104
     },
     {
       "path": "test/fixtures.ts",
@@ -227,7 +243,7 @@
     },
     {
       "path": "artifacts/submission-budget.json",
-      "bytes": 4304
+      "bytes": 4627
     }
   ]
 }

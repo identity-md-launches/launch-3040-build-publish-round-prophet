@@ -1,5 +1,25 @@
 [
   {
+    "name": "a side must be explicitly chosen on first load, each new round and rematch",
+    "passed": true
+  },
+  {
+    "name": "a healthy 55-second-old status stays Online for locking, scoring and navigation",
+    "passed": true
+  },
+  {
+    "name": "a round closed before settlement accepts neither player locks nor new spectator calls",
+    "passed": true
+  },
+  {
+    "name": "locks close at the deadline even when the settlement anchor has not advanced",
+    "passed": true
+  },
+  {
+    "name": "the final refresh rejects closure racing a first lock or later leg without inventing scores",
+    "passed": true
+  },
+  {
     "name": "390 first screen: product, persona and primary action; 320/760/1024/1440 reflow",
     "passed": true
   },

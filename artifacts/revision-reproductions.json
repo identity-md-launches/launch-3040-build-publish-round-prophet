@@ -1,0 +1,17 @@
+[
+  {
+    "finding": "e42a781d0406f2e8b360ae89f11ee64aa3251fcfad5c6bc51e4bcf311f4f1192",
+    "reproduced": true,
+    "evidence": "Unchanged dist at 390px: an online measurement, fresh history and status generated 55 seconds ago with a 120-second window produce Stale and disabled locking."
+  },
+  {
+    "finding": "6782c434b51ec66b0ddce8f14fe283b6980000ef51a47eba520460cf84c4b60d",
+    "reproduced": true,
+    "evidence": "Unchanged dist at 390px accepted Idle on anchor+1 (#21) even though its API-provided end was three minutes in the past."
+  },
+  {
+    "finding": "ba8f29a8f2f0dfaee8543dc46d1d3779863345d1c29aeefdd7599fd330e7fb6d",
+    "reproduced": true,
+    "evidence": "Unchanged dist at 390px preselected Active and accepted an Active lock without selecting either side."
+  }
+]

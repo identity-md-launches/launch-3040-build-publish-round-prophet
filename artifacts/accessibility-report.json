@@ -1,9 +1,16 @@
 {
   "tool": "axe-core via Playwright",
-  "tags": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"],
+  "tags": [
+    "wcag2a",
+    "wcag2aa",
+    "wcag21a",
+    "wcag21aa",
+    "wcag22aa"
+  ],
   "states": [
-    "fresh unlocked arena",
-    "locked arena (separate browser scenario)"
+    "unselected arena (revision)",
+    "closed-round arena (revision)",
+    "locked arena (revision browser scenario)"
   ],
   "violations": [],
   "renderedContrastAtRest": [
@@ -49,5 +56,6 @@
     "rootFontSize": "200%",
     "documentScrollWidth": 390,
     "note": "The round rail intentionally scrolls within its own region. This is not native browser zoom."
-  }
+  },
+  "provenance": "The numeric contrast pairs were measured in the initial accepted build. CSS/color tokens are unchanged. The revision taste probe independently passed contrast; revision-interface.json records final unselected/closed axe scans, and interaction-report.json includes the locked-state scan."
 }

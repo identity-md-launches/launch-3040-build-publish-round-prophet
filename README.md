@@ -29,16 +29,16 @@ The source and committed-export handoff are ready for the assignment’s reposit
 ## Play a duel
 
 1. Choose **Momentum**, **Mean-revert**, or **Timekeeper**. On a phone, the selector is at the top of the arena.
-2. Predict the **next settled round**: **Active** means work greater than zero; **Idle** means exactly zero. An Active call may include a Low, Mid, or High work band.
-3. Select **Lock & start duel**. The feed is checked again before accepting the call. If that round just settled, review the new round and lock again.
+2. Choose a side for the **next unsettled round, while it is still open**: **Active** means work greater than zero; **Idle** means exactly zero. Neither side is preselected. An Active call may include a Low, Mid, or High work band.
+3. Select **Lock & start duel**. The feed and round deadline are checked again before accepting the call. If that round just closed or settled, the call is rejected. A closed round shows **Round closed** until settlements catch up.
 4. Return to lock your prediction for each following consecutive round. The match cannot skip forward to an easier round. A missed call is an explicit forfeit.
 5. First to **2 round wins** ends the duel. After three rounds, the larger round-win count wins. Equal counts produce a draw, because real tied calls should not produce an invented winner.
 
 A correct side earns **3 points**. A correct work band adds **1 point**, only with a correct Active side. Higher points wins the round; equal points tie and award no round win. Thus a wrong side can never beat a correct side. Bands use the nearest-rank one-third and two-thirds quantiles of positive work in the most recent 60 provable settled rounds; boundaries are inclusive and repeated values stay together. Zero-work rounds have no band bonus. The disclosure below the model gives the exact thresholds.
 
-Brain commits **all three** of its forecasts when the match starts. Its history cutoff, reasoning, weights, and the band thresholds stay fixed throughout that duel. The player locks one call per round before its settlement. This precommitment prevents hindsight calls if several rounds settle while the tab is away. An unused third round after a 2–0 win is marked “Not needed.”
+Brain commits **all three** of its forecasts when the match starts. Its history cutoff, reasoning, weights, and the band thresholds stay fixed throughout that duel. The player explicitly chooses and locks one call per round before it closes. The next round starts with neither side selected; an existing locked choice is restored on reload. This precommitment prevents hindsight calls if several rounds settle while the tab is away. An unused third round after a 2–0 win is marked “Not needed.”
 
-Real Squeekchain rounds are approximately ten minutes, and confirmation can take longer. This is a real-time game, not an accelerated simulation. A round can already be closed while awaiting settlement; the target is the next unanchored round. No optimistic work, current wheel speed, projected builder state, or queued round total is used to decide a result.
+Real Squeekchain rounds are approximately ten minutes, and confirmation can take longer. This is a real-time game, not an accelerated simulation. The target remains the next unanchored round: if it has already closed, locking waits for settlement instead of accepting a call on already public work. A current match never skips a consecutive round. The API’s round end and duration determine each leg’s deadline; only the confirmed anchor and proven work resolve it. No optimistic work, current wheel speed, projected builder state, or queued round total is used to decide a result.
 
 ## The three Brains
 
@@ -66,9 +66,11 @@ The round rail shows up to 20 proven rounds; fewer are shown when the API suppli
 
 **Online** requires fresh status, an online measurement, live settlement history, matching installation IDs, and sufficiently recent history. An API failure shows **Offline**; stale readings or a durable-cache settlement response show **Stale**. Both states pause new locks and result scoring. Retry and automatic polling recover the feed. When confirmed data returns, genuinely settled locked rounds resolve, and uncalled consecutive rounds count as forfeits. A backward anchor or conflicting cumulative values pauses play.
 
+Status age uses the API’s own `measurement.staleAfterSeconds` window, as does the separate measurement observation-age check. A status document generated 55 seconds ago remains Online with a 120-second window and otherwise fresh data. History and stats retain their separate freshness checks. A healthy feed can show **Online** while the target is closed; feed health and lock eligibility are separate states.
+
 ## Spectate, history and sharing
 
-**Spectate** saves a Brain call before settlement and grades that side against the same confirmed data. It does not invent forecasts for rounds that passed before the browser was watching. Calls from other personas remain in the local call sheet.
+**Spectate** saves a Brain call while the target round is still open and grades that side against the same confirmed data. It does not create a late call on a closed round or invent forecasts for rounds that passed before the browser was watching. Calls from other personas remain in the local call sheet.
 
 The last 30 completed matches, the current duel, and the last 30 spectator calls live under `round-prophet:season:v1` in localStorage. This is a local matchbook, not a shared leaderboard or tamper-proof record. Refresh restores calls. If storage is blocked, the game explains that the tab must stay open. Clearing browser data clears the record; use one active game tab for a predictable local season.
 
@@ -83,11 +85,11 @@ npm run build
 npm run test:browser
 ```
 
-The browser test serves the actual export at `/preview/`, uses explicitly synthetic API fixtures, and closes its server and browser when finished. Test data is never imported by the game. It checks complete 2–1 and 2–0 duels, defeat, draw, immutable Brain calls, reloads, bands, missed calls, API outage and stale states, a settlement racing a lock, spectator grading, PNG export, clipboard text, match history, keyboard focus, reduced motion, and accessibility with axe. It also checks 320, 390, 760, 1024, and 1440 widths, the first phone screen, and 200% CSS text enlargement.
+The browser test serves the actual export at `/preview/`, uses explicitly synthetic API fixtures, and closes its server and browser when finished. Test data is never imported by the game. It checks complete 2–1 and 2–0 duels, defeat, draw, immutable Brain calls, reloads, bands, missed calls, API outage and stale states, healthy minute-cadence status, closure at the deadline, closure or settlement racing a lock, explicit side selection/reset, closed-round spectator gating, spectator grading, PNG export, clipboard text, match history, keyboard focus, reduced motion, and accessibility with axe. It also checks 320, 390, 760, 1024, and 1440 widths, the first phone screen, and 200% CSS text enlargement.
 
-Actual worker results: **production build passed; strict TypeScript check passed; 17 engine/data tests passed; 11 browser scenarios passed; 16/16 taste@1 checks passed; zero axe violations in the checked states**. Live public responses also produced proven rounds, working persona selection, a real call lock, and restoration after reload. Full details, source findings, exact commands, screenshots, and limits are in [`artifacts/validation.md`](artifacts/validation.md). These are worker observations, not independent certification.
+Revision worker results: **production build passed; strict TypeScript check passed; 19 engine/data tests passed; 16 browser scenarios passed; 16/16 taste@1 checks passed; zero axe violations in the checked states**. All three reviewer reports were reproduced against the unchanged export before fixing them; responses are in [.imd-responses.json](.imd-responses.json). Full details, source findings, exact commands, screenshots, and limits are in [`artifacts/validation.md`](artifacts/validation.md). These are worker observations, not independent certification. The arena screenshots above use labeled synthetic test fixtures, not claimed live outcomes.
 
-Browser limits: the supplied browser launcher could not start; the installed headless Chromium was used instead. Direct browser egress to the API failed in this environment, so the live-data browser check forwarded the same official requests through curl without altering their data. Separate interaction tests use labeled synthetic fixtures. WebKit could not run because required system libraries are absent. Physical iPhone/Safari, native browser 200% zoom, and a real screen-reader session were not verified. The 200% check enlarged CSS text, not browser chrome. A full live match was not awaited; complete settlement flows were exercised with deterministic fixtures.
+Browser limits: the supplied browser launcher could not start; headless Chromium was used instead. During this revision the official status endpoint returned an HTTP 403 Cloudflare challenge, so current live cadence and an end-to-end live lock could not be verified. Reproductions and complete settlement flows use labeled synthetic fixtures against the production export. The earlier accepted build’s live capture is historical evidence only. WebKit could not run because required system libraries are absent. Physical iPhone/Safari, native browser 200% zoom, and a real screen-reader session were not verified. The 200% check enlarged CSS text, not browser chrome.
 
 ## Source map and design
 

@@ -4,7 +4,7 @@
    "name": "render",
    "passed": true,
    "exitCode": 0,
-   "durationMs": 8885,
+   "durationMs": 8626,
    "output": "renders, no script errors or missing local files\nexternal hosts: api.squeekchain.com"
   },
   {
@@ -46,14 +46,14 @@
    "name": "eyebrows",
    "passed": true,
    "exitCode": 0,
-   "durationMs": 1,
+   "durationMs": 0,
    "output": "no kicker labels above headings"
   },
   {
    "name": "type-sizes",
    "passed": true,
    "exitCode": 0,
-   "durationMs": 0,
+   "durationMs": 1,
    "output": "390: 5 sizes in use, 5 with one-offs (13px×46, 16px×6, 20px×3, 28px×2, 40px×2)\n1440: 4 sizes in use, 6 with one-offs (13px×56, 16px×9, 20px×4, 28px×1, 40px×1, 72px×2)\nbar: 6 sizes used more than once, 8 counting one-offs, per width"
   },
   {
@@ -88,7 +88,7 @@
    "name": "copy-budget",
    "passed": true,
    "exitCode": 0,
-   "durationMs": 1,
+   "durationMs": 0,
    "output": "prose on the first screen: 45 words at 390 (bar 60), 74 at 1440 (bar 90)\nall words on the first screen: 90 at 390, 171 at 1440\nwhole page: 268 words, 131 of them prose"
   },
   {
@@ -114,7 +114,7 @@
   }
  ],
  "target": "dist",
- "at": "2026-11-06T09:59:36.520Z",
+ "at": "2026-11-06T10:28:01.004Z",
  "bar": {
   "sizes": 6,
   "strays": 8,
@@ -201,7 +201,7 @@
      "label": "MomentumMean-revertTimekeeper"
     },
     {
-     "sel": "div.prediction-controls:nth-of-type(2) > fieldset:nth-of-type(1) > div.side-choices > button.side-choice.selected:nth-of-type(1)",
+     "sel": "div.prediction-controls:nth-of-type(2) > fieldset:nth-of-type(1) > div.side-choices > button.side-choice:nth-of-type(1)",
      "w": 150,
      "h": 66,
      "cx": 114,
@@ -220,7 +220,7 @@
      "sel": "div.prediction-controls:nth-of-type(2) > fieldset.band-field:nth-of-type(2) > div.band-choices > button:nth-of-type(1)",
      "w": 99,
      "h": 44,
-     "cx": 88.328125,
+     "cx": 88.3359375,
      "cy": 742.1875,
      "label": "Low"
     },
@@ -228,7 +228,7 @@
      "sel": "div.prediction-controls:nth-of-type(2) > fieldset.band-field:nth-of-type(2) > div.band-choices > button:nth-of-type(2)",
      "w": 99,
      "h": 44,
-     "cx": 194.9921875,
+     "cx": 195.0078125,
      "cy": 742.1875,
      "label": "Mid"
     },
@@ -236,7 +236,7 @@
      "sel": "div.prediction-controls:nth-of-type(2) > fieldset.band-field:nth-of-type(2) > div.band-choices > button:nth-of-type(3)",
      "w": 99,
      "h": 44,
-     "cx": 301.6640625,
+     "cx": 301.6796875,
      "cy": 742.1875,
      "label": "High"
     },
@@ -364,7 +364,7 @@
      "label": "Retry feed"
     },
     {
-     "sel": "div.prediction-controls:nth-of-type(2) > fieldset:nth-of-type(1) > div.side-choices > button.side-choice.selected:nth-of-type(1)",
+     "sel": "div.prediction-controls:nth-of-type(2) > fieldset:nth-of-type(1) > div.side-choices > button.side-choice:nth-of-type(1)",
      "w": 214,
      "h": 76,
      "cx": 606.4921875,
@@ -383,7 +383,7 @@
      "sel": "div.prediction-controls:nth-of-type(2) > fieldset.band-field:nth-of-type(2) > div.band-choices > button:nth-of-type(1)",
      "w": 138,
      "h": 44,
-     "cx": 568.875,
+     "cx": 568.8828125,
      "cy": 783.1875,
      "label": "Low"
     },
@@ -391,7 +391,7 @@
      "sel": "div.prediction-controls:nth-of-type(2) > fieldset.band-field:nth-of-type(2) > div.band-choices > button:nth-of-type(2)",
      "w": 138,
      "h": 44,
-     "cx": 719.3203125,
+     "cx": 719.3359375,
      "cy": 783.1875,
      "label": "Mid"
     },
@@ -399,7 +399,7 @@
      "sel": "div.prediction-controls:nth-of-type(2) > fieldset.band-field:nth-of-type(2) > div.band-choices > button:nth-of-type(3)",
      "w": 138,
      "h": 44,
-     "cx": 869.7734375,
+     "cx": 869.7890625,
      "cy": 783.1875,
      "label": "High"
     },
@@ -876,7 +876,7 @@
    "pill": true,
    "x": 186.671875,
    "y": 410.6875,
-   "w": 16.65625,
+   "w": 16.671875,
    "h": 17,
    "fixed": false,
    "chrome": false,
@@ -900,7 +900,7 @@
    "inCode": false,
    "heading": false,
    "pill": true,
-   "x": 207.328125,
+   "x": 207.34375,
    "y": 410.6875,
    "w": 16.671875,
    "h": 17,
@@ -1014,7 +1014,7 @@
    "digits": 0
   },
   {
-   "sel": "div.side-choices > button.side-choice.selected:nth-of-type(1) > span:nth-of-type(2) > strong",
+   "sel": "div.side-choices > button.side-choice:nth-of-type(1) > span:nth-of-type(2) > strong",
    "text": "Active",
    "words": 1,
    "tag": "strong",
@@ -1025,7 +1025,7 @@
    "upper": false,
    "authoredCaps": false,
    "tracking": 0,
-   "ratio": 13.34,
+   "ratio": 14.81,
    "large": false,
    "inCode": false,
    "heading": false,
@@ -1040,7 +1040,7 @@
    "digits": 0
   },
   {
-   "sel": "div.side-choices > button.side-choice.selected:nth-of-type(1) > span:nth-of-type(2) > small",
+   "sel": "div.side-choices > button.side-choice:nth-of-type(1) > span:nth-of-type(2) > small",
    "text": "Work > 0",
    "words": 2,
    "tag": "small",
@@ -1051,7 +1051,7 @@
    "upper": false,
    "authoredCaps": false,
    "tracking": 0,
-   "ratio": 6.38,
+   "ratio": 7.08,
    "large": false,
    "inCode": false,
    "heading": false,
@@ -1188,7 +1188,7 @@
    "pill": true,
    "x": 39,
    "y": 720.1875,
-   "w": 98.65625,
+   "w": 98.671875,
    "h": 44,
    "fixed": false,
    "chrome": false,
@@ -1212,7 +1212,7 @@
    "inCode": false,
    "heading": false,
    "pill": true,
-   "x": 145.65625,
+   "x": 145.671875,
    "y": 720.1875,
    "w": 98.671875,
    "h": 44,
@@ -1238,7 +1238,7 @@
    "inCode": false,
    "heading": false,
    "pill": true,
-   "x": 252.328125,
+   "x": 252.34375,
    "y": 720.1875,
    "w": 98.671875,
    "h": 44,
@@ -2646,7 +2646,7 @@
    "pill": true,
    "x": 512,
    "y": 505.34375,
-   "w": 19.34375,
+   "w": 19.328125,
    "h": 20,
    "fixed": false,
    "chrome": false,
@@ -2670,7 +2670,7 @@
    "inCode": false,
    "heading": false,
    "pill": true,
-   "x": 536.34375,
+   "x": 536.328125,
    "y": 505.34375,
    "w": 19.328125,
    "h": 20,
@@ -2696,7 +2696,7 @@
    "inCode": false,
    "heading": false,
    "pill": true,
-   "x": 560.671875,
+   "x": 560.65625,
    "y": 505.34375,
    "w": 19.328125,
    "h": 20,
@@ -2862,7 +2862,7 @@
    "digits": 0
   },
   {
-   "sel": "div.side-choices > button.side-choice.selected:nth-of-type(1) > span:nth-of-type(2) > strong",
+   "sel": "div.side-choices > button.side-choice:nth-of-type(1) > span:nth-of-type(2) > strong",
    "text": "Active",
    "words": 1,
    "tag": "strong",
@@ -2873,7 +2873,7 @@
    "upper": false,
    "authoredCaps": false,
    "tracking": 0,
-   "ratio": 13.34,
+   "ratio": 14.81,
    "large": false,
    "inCode": false,
    "heading": false,
@@ -2888,7 +2888,7 @@
    "digits": 0
   },
   {
-   "sel": "div.side-choices > button.side-choice.selected:nth-of-type(1) > span:nth-of-type(2) > small",
+   "sel": "div.side-choices > button.side-choice:nth-of-type(1) > span:nth-of-type(2) > small",
    "text": "Work > 0",
    "words": 2,
    "tag": "small",
@@ -2899,7 +2899,7 @@
    "upper": false,
    "authoredCaps": false,
    "tracking": 0,
-   "ratio": 6.38,
+   "ratio": 7.08,
    "large": false,
    "inCode": false,
    "heading": false,
@@ -3036,7 +3036,7 @@
    "pill": true,
    "x": 499.65625,
    "y": 761.1875,
-   "w": 138.4375,
+   "w": 138.453125,
    "h": 44,
    "fixed": false,
    "chrome": false,
@@ -3060,7 +3060,7 @@
    "inCode": false,
    "heading": false,
    "pill": true,
-   "x": 650.09375,
+   "x": 650.109375,
    "y": 761.1875,
    "w": 138.453125,
    "h": 44,
@@ -3086,7 +3086,7 @@
    "inCode": false,
    "heading": false,
    "pill": true,
-   "x": 800.546875,
+   "x": 800.5625,
    "y": 761.1875,
    "w": 138.453125,
    "h": 44,

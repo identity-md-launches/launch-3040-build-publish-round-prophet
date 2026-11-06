@@ -1,0 +1,73 @@
+{
+  "generatedAt": "2026-11-06T10:31:12.044Z",
+  "source": "Synthetic fixtures against final dist, not live data",
+  "viewports": [
+    {
+      "width": 320,
+      "scrollWidth": 320,
+      "ctaBottom": 799.6875,
+      "selectedSides": 0,
+      "freshness": "Online · public feed",
+      "loadedFonts": [
+        "DM Sans",
+        "Space Grotesk"
+      ]
+    },
+    {
+      "width": 390,
+      "scrollWidth": 390,
+      "ctaBottom": 780.1875,
+      "selectedSides": 0,
+      "freshness": "Online · public feed",
+      "loadedFonts": [
+        "DM Sans",
+        "Space Grotesk"
+      ]
+    },
+    {
+      "width": 760,
+      "scrollWidth": 760,
+      "ctaBottom": 780.1875,
+      "selectedSides": 0,
+      "freshness": "Online · public feed",
+      "loadedFonts": [
+        "DM Sans",
+        "Space Grotesk"
+      ]
+    },
+    {
+      "width": 1024,
+      "scrollWidth": 1024,
+      "ctaBottom": 927,
+      "selectedSides": 0,
+      "freshness": "Online · public feed",
+      "loadedFonts": [
+        "DM Sans",
+        "Space Grotesk"
+      ]
+    },
+    {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "ctaBottom": 793.1875,
+      "selectedSides": 0,
+      "freshness": "Online · public feed",
+      "loadedFonts": [
+        "DM Sans",
+        "Space Grotesk"
+      ]
+    }
+  ],
+  "accessibility": [
+    {
+      "state": "unselected",
+      "violations": []
+    },
+    {
+      "state": "closed",
+      "violations": []
+    }
+  ],
+  "scriptErrors": [],
+  "failedLocalResources": []
+}
