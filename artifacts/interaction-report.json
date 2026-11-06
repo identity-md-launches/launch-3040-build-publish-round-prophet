@@ -1,0 +1,46 @@
+[
+  {
+    "name": "390 first screen: product, persona and primary action; 320/760/1024/1440 reflow",
+    "passed": true
+  },
+  {
+    "name": "complete three-round 2–1 duel, restore locks, freeze Brain, download and copy share card",
+    "passed": true
+  },
+  {
+    "name": "a 2–0 duel ends early and rematch resets the arena",
+    "passed": true
+  },
+  {
+    "name": "API outage pauses locks and scoring; recovery resolves a genuinely settled round",
+    "passed": true
+  },
+  {
+    "name": "stale measurement and old status stop locks; retry returns to Online",
+    "passed": true
+  },
+  {
+    "name": "consecutive missed calls yield explicit forfeits and Brain holds",
+    "passed": true
+  },
+  {
+    "name": "three equal calls produce a draw with no fabricated winner",
+    "passed": true
+  },
+  {
+    "name": "spectator calls lock before settlement and are graded only once",
+    "passed": true
+  },
+  {
+    "name": "keyboard help dialog traps focus, Escape closes, focus returns; reduced motion and axe audit",
+    "passed": true
+  },
+  {
+    "name": "a round that settles during lock is rejected instead of silently moving the call",
+    "passed": true
+  },
+  {
+    "name": "corrupt browser storage recovers to an honest empty game",
+    "passed": true
+  }
+]

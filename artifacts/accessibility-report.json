@@ -1,0 +1,53 @@
+{
+  "tool": "axe-core via Playwright",
+  "tags": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"],
+  "states": [
+    "fresh unlocked arena",
+    "locked arena (separate browser scenario)"
+  ],
+  "violations": [],
+  "renderedContrastAtRest": [
+    {
+      "name": "body",
+      "foreground": "rgb(244, 241, 233)",
+      "background": "rgb(20, 22, 25)",
+      "ratio": 16.06
+    },
+    {
+      "name": "muted on arena",
+      "foreground": "rgb(164, 170, 169)",
+      "background": "rgb(27, 30, 35)",
+      "ratio": 7.08
+    },
+    {
+      "name": "selected side",
+      "foreground": "rgb(244, 241, 233)",
+      "background": "rgb(32, 41, 27)",
+      "ratio": 13.34
+    },
+    {
+      "name": "primary button",
+      "foreground": "rgb(32, 39, 25)",
+      "background": "rgb(198, 239, 134)",
+      "ratio": 11.78
+    },
+    {
+      "name": "Brain score",
+      "foreground": "rgb(198, 239, 134)",
+      "background": "rgb(27, 30, 35)",
+      "ratio": 12.81
+    },
+    {
+      "name": "human score",
+      "foreground": "rgb(243, 159, 139)",
+      "background": "rgb(27, 30, 35)",
+      "ratio": 8.07
+    }
+  ],
+  "cssTextEnlargement": {
+    "viewportWidth": 390,
+    "rootFontSize": "200%",
+    "documentScrollWidth": 390,
+    "note": "The round rail intentionally scrolls within its own region. This is not native browser zoom."
+  }
+}

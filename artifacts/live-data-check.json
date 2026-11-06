@@ -1,0 +1,84 @@
+{
+  "observedAt": "2026-11-06T10:03:05.966Z",
+  "mobile": {
+    "status": "Online",
+    "round": "Round #373",
+    "brain": "Brain\u2019s next call\nIdle\n\n14 idle in a row. Recent activity is 0%; I\u2019m following the streak.",
+    "button": {
+      "x": 39,
+      "y": 730.1875,
+      "width": 312,
+      "height": 50,
+      "top": 730.1875,
+      "right": 351,
+      "bottom": 780.1875,
+      "left": 39
+    },
+    "scroll": 390,
+    "fonts": [
+      {
+        "family": "DM Sans",
+        "weight": "400 700",
+        "status": "loaded"
+      },
+      {
+        "family": "Space Grotesk",
+        "weight": "400 700",
+        "status": "loaded"
+      }
+    ]
+  },
+  "timekeeper": "Brain\u2019s next call\nIdle\n\n3 observed days in this UTC half-hour. I\u2019m weighting that cadence alongside recent rounds.",
+  "mean": "Brain\u2019s next call\nIdle\n\nRecent activity is 0% against a 42% baseline. I\u2019m fading the gap toward the average.",
+  "lockedRound": "Round #373",
+  "brainHistory": ["372", "372", "372"],
+  "restoredBand": "true",
+  "requests": [
+    {
+      "url": "https://api.squeekchain.com/v1/status",
+      "status": 200,
+      "source": null
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/measurement/stats?range=7d",
+      "status": 200,
+      "source": null
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/settlements?range=now",
+      "status": 200,
+      "source": "live"
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/status",
+      "status": 200,
+      "source": null
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/settlements?range=now",
+      "status": 200,
+      "source": "live"
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/measurement/stats?range=7d",
+      "status": 200,
+      "source": null
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/status",
+      "status": 200,
+      "source": null
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/settlements?range=now",
+      "status": 200,
+      "source": "live"
+    },
+    {
+      "url": "https://api.squeekchain.com/v1/measurement/stats?range=7d",
+      "status": 200,
+      "source": null
+    }
+  ],
+  "scriptErrors": []
+}

@@ -1,0 +1,233 @@
+{
+  "limitBytes": 8388608,
+  "addedBytes": 1651564,
+  "remainingBytes": 6737044,
+  "fileCount": 53,
+  "artifactBytes": 868012,
+  "includedPathBudget": {
+    "/artifacts/**": 2097152
+  },
+  "distBytes": 416440,
+  "ignoredPathBudget": {
+    "**/node_modules/": 0,
+    "**/.npm/": 0,
+    "**/.vite/": 0,
+    "**/.cache/": 0,
+    "**/coverage/": 0,
+    "/test/scratch/": 0
+  },
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 409
+    },
+    {
+      "path": "artifacts/accessibility-report.json",
+      "bytes": 1343
+    },
+    {
+      "path": "artifacts/arena-1440.png",
+      "bytes": 179668
+    },
+    {
+      "path": "artifacts/arena-390.png",
+      "bytes": 133455
+    },
+    {
+      "path": "artifacts/design-guidance-LICENSE.txt",
+      "bytes": 11964
+    },
+    {
+      "path": "artifacts/fixture-share-card.png",
+      "bytes": 80827
+    },
+    {
+      "path": "artifacts/help-focus-390.png",
+      "bytes": 55506
+    },
+    {
+      "path": "artifacts/interaction-report.json",
+      "bytes": 1268
+    },
+    {
+      "path": "artifacts/live-data-check.json",
+      "bytes": 2185
+    },
+    {
+      "path": "artifacts/offline-first-screen-390.png",
+      "bytes": 148494
+    },
+    {
+      "path": "artifacts/spectator-390.png",
+      "bytes": 137593
+    },
+    {
+      "path": "artifacts/taste-report.json",
+      "bytes": 84732
+    },
+    {
+      "path": "artifacts/validation.md",
+      "bytes": 26673
+    },
+    {
+      "path": "DESIGN.md",
+      "bytes": 12238
+    },
+    {
+      "path": "dist/assets/index-BC468hAn.js",
+      "bytes": 244441
+    },
+    {
+      "path": "dist/assets/index-C2b3cWmQ.css",
+      "bytes": 29123
+    },
+    {
+      "path": "dist/favicon.svg",
+      "bytes": 360
+    },
+    {
+      "path": "dist/fonts/dm-sans-latin.woff2",
+      "bytes": 36932
+    },
+    {
+      "path": "dist/fonts/DM-Sans-OFL.txt",
+      "bytes": 4482
+    },
+    {
+      "path": "dist/fonts/space-grotesk-latin.woff2",
+      "bytes": 22288
+    },
+    {
+      "path": "dist/fonts/Space-Grotesk-OFL.txt",
+      "bytes": 4495
+    },
+    {
+      "path": "dist/index.html",
+      "bytes": 1968
+    },
+    {
+      "path": "dist/social-card.png",
+      "bytes": 69026
+    },
+    {
+      "path": "dist/social-card.svg",
+      "bytes": 3325
+    },
+    {
+      "path": "index.html",
+      "bytes": 1868
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 42060
+    },
+    {
+      "path": "package.json",
+      "bytes": 849
+    },
+    {
+      "path": "public/favicon.svg",
+      "bytes": 360
+    },
+    {
+      "path": "public/fonts/dm-sans-latin.woff2",
+      "bytes": 36932
+    },
+    {
+      "path": "public/fonts/DM-Sans-OFL.txt",
+      "bytes": 4482
+    },
+    {
+      "path": "public/fonts/space-grotesk-latin.woff2",
+      "bytes": 22288
+    },
+    {
+      "path": "public/fonts/Space-Grotesk-OFL.txt",
+      "bytes": 4495
+    },
+    {
+      "path": "public/social-card.png",
+      "bytes": 69026
+    },
+    {
+      "path": "public/social-card.svg",
+      "bytes": 3325
+    },
+    {
+      "path": "README.md",
+      "bytes": 12228
+    },
+    {
+      "path": "scripts/check-budget.mjs",
+      "bytes": 3001
+    },
+    {
+      "path": "scripts/generate-social.mjs",
+      "bytes": 3284
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 37200
+    },
+    {
+      "path": "src/components/Art.tsx",
+      "bytes": 6605
+    },
+    {
+      "path": "src/components/ShareCard.tsx",
+      "bytes": 4090
+    },
+    {
+      "path": "src/data.ts",
+      "bytes": 8130
+    },
+    {
+      "path": "src/engine.ts",
+      "bytes": 9043
+    },
+    {
+      "path": "src/main.tsx",
+      "bytes": 138
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 36166
+    },
+    {
+      "path": "src/useGame.ts",
+      "bytes": 15577
+    },
+    {
+      "path": "test/browser.mjs",
+      "bytes": 18496
+    },
+    {
+      "path": "test/engine.test.ts",
+      "bytes": 8277
+    },
+    {
+      "path": "test/fixtures.ts",
+      "bytes": 2189
+    },
+    {
+      "path": "test/server.mjs",
+      "bytes": 1318
+    },
+    {
+      "path": "THIRD_PARTY.md",
+      "bytes": 1959
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 465
+    },
+    {
+      "path": "vite.config.ts",
+      "bytes": 614
+    },
+    {
+      "path": "artifacts/submission-budget.json",
+      "bytes": 4304
+    }
+  ]
+}

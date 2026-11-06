@@ -1,0 +1,33 @@
+{
+  "name": "round-prophet",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.18.0"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --experimental-strip-types --test test/engine.test.ts",
+    "test:browser": "node test/browser.mjs",
+    "social": "node scripts/generate-social.mjs",
+    "budget": "node scripts/check-budget.mjs"
+  },
+  "dependencies": {
+    "lossless-json": "4.3.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "typescript": "5.9.3",
+    "vite": "7.2.2",
+    "playwright": "1.56.1",
+    "@axe-core/playwright": "4.11.0"
+  }
+}

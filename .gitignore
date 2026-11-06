@@ -1,0 +1,12 @@
+# Explicit included path budget: /artifacts/** <= 2097152 bytes, reports and screenshots.
+!/artifacts/
+!/artifacts/**
+# Explicit path budget: dependency/cache directories only, at every nesting level.
+**/node_modules/
+**/.npm/
+**/.vite/
+**/.cache/
+**/coverage/
+# Scratch tools, API responses and temporary test evidence; never runtime assets.
+/test/scratch/
+# Build assets in /dist are deliberately included.
